@@ -1,7 +1,9 @@
-import sys
+import sys, os
 from PyQt5.QtWidgets import QMainWindow, QApplication, QDesktopWidget, QAction, qApp, QToolBar, QPushButton, QWidget, QDialog, QDialogButtonBox, QMessageBox, QGridLayout, QTextEdit, QSlider, QLabel
 from PyQt5.QtGui import QIcon, QPainter
 from PyQt5.QtCore import Qt, QSize
+
+IMAGES = "../Images"
 
 class SolidPopup(QDialog):
     def __init__(self, *args, **kw_args):
@@ -50,7 +52,7 @@ class Main(QMainWindow):
         self.statusBar().showMessage("Welcome")
 
         # creates an action to close window
-        exitAct = QAction(QIcon("Images/exit.png"), "&Exit", self)
+        exitAct = QAction(QIcon(IMAGES+"/exit.png"), "&Exit", self)
         exitAct.setShortcut("Ctrl+Q")
         exitAct.setStatusTip("Exit Application")
         exitAct.triggered.connect(qApp.quit)
@@ -71,7 +73,7 @@ class Main(QMainWindow):
 
         # add a button to the toolbar to create a mirror
         btn = QPushButton("", self)
-        btn.setIcon(QIcon("Images/mirror.png"))
+        btn.setIcon(QIcon(IMAGES+"/mirror.png"))
         btn.setIconSize(QSize(section, section))
         btn.clicked.connect(self.add_mirror)
         btn.setStatusTip("Add a mirror to the system")
@@ -80,7 +82,7 @@ class Main(QMainWindow):
 
         # add a button to the toolbar to create a solid
         btn = QPushButton("", self)
-        btn.setIcon(QIcon("Images/solid.png"))
+        btn.setIcon(QIcon(IMAGES+"/solid.png"))
         btn.setIconSize(QSize(section, section))
         btn.clicked.connect(self.add_solid)
         btn.setStatusTip("Add an n-sided solid to the system")
@@ -94,7 +96,7 @@ class Main(QMainWindow):
         self.setGeometry(int(cp.topLeft().x()+cp.width()*.15), int(cp.topLeft().y()+cp.height()*.15), int(cp.width()*.7), int(cp.height()*.7))
 
         self.setWindowTitle("Ghost Hunters")
-        self.setWindowIcon(QIcon("Images/logo.png"))
+        self.setWindowIcon(QIcon(IMAGES+"/logo.png"))
 
     def add_mirror(self):
         """ adds a mirror to the system """
