@@ -15,7 +15,6 @@ class Example(QWidget):
         QToolTip.setFont(QFont("SansSerif", 10))
         self.setToolTip("This is a <b>GHOST HUNTERS</b>")
 
-        self.statusBar()
         # create a button that calls doSomething when it's clicked
         btn = QPushButton("Button", self)
         btn.clicked.connect(doSomething)
