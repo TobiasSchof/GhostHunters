@@ -34,7 +34,7 @@ class Ray:
         ray_refl = Ray(b.start,refl_angle, self.brightness*(1-b.t_coeff))
         ray_refr = Ray(b.start,refr_angle, self.brightness*b.t_coeff)
         return ray_refl, ray_refr
-        
+
 
 class Boundary:
     """ This class defines a Boundary between air and another medium
@@ -48,3 +48,47 @@ class Boundary:
     """
 
     def __init__(self, start:list, end:list, t_coeff:float, ref_idx:float):
+        """Constructor for the Boundary class"""
+    def bound_line(self, start:list, end:list):
+        """Defines the boundary lines of the material given its start and endpoints
+        
+        This method returns the equation of a line that defines the boundary
+        """
+        slope = (self.end[1]-self.start[1])/(self.end[0]-self.start[0])
+        intercept = self.end[1]-slope*end[0]
+
+        """
+
+
+
+        This is a test commit
+        
+        
+        """
+
+
+def intersection(ray, boundary):
+    """This function determines when a propogating ray intersects with a given boundary
+
+    Inputs:
+        ray             = 
+        boundary        = 
+    Returns:
+        intersect: list = the point of intersection
+
+
+    """
+
+def prop(ray, threshold):
+    """This function applies split on a ray while the brightness is still greater than threshold value
+
+    Inputs:
+        ray = incident ray on a surface that will be reflected and refracted
+        threshold = minimum brightness value that will stop prop
+    Returns:
+
+    """
+    ray_list=[];
+    if ray.brightness <= threshold:
+        return
+    ray_list.append(ray)
