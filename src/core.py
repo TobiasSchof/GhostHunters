@@ -1,14 +1,14 @@
 # A python script to hold the basic classes/functions used in this package
 
 class Boundary:
-    """ This class defines a Boundary between air and another medium
+    """ This class defines a Boundary between air and another medium\
 
     Parameters:
-        start:     [float, float] = the start of the line segment defining this barrier
-        end:       [float, float] = the end of the line segment defining this barrier
-        t_coeff:   float          = the transmission coefficient of the barrier
-        ref_idx:   float          = the refractive index of the other medium
-        norm:      [float, float] = the direction of the norm towards the air side
+        start:     [float, float] = the start of the line segment defining this barrier\
+        end:       [float, float] = the end of the line segment defining this barrier\
+        t_coeff:   float          = the transmission coefficient of the barrier\
+        ref_idx:   float          = the refractive index of the other medium\
+        norm:      [float, float] = the direction of the norm towards the air side\
     """
 
     def __init__(self, start:list, end:list, t_coeff:float, ref_idx:float):
@@ -23,7 +23,7 @@ class Boundary:
         
         This method returns the equation of a line that defines the boundary
 
-        Inputs: 
+        Args: 
             start: [int, int] = starting point of the boundary
             end: [int, int]   = end of the boundary
         Returns: 
@@ -57,7 +57,7 @@ class Ray:
     def ray_coords(self, start:list, angle:float):
         """ Defines lists of x,y coordinates for the ray
 
-            Inputs: 
+            Args: 
                 start: [int, int]     = the starting point of the ray
                 angle:  float         = angle of the ray in radians
             Returns:
@@ -77,7 +77,7 @@ class Ray:
 
         This method assumes that the given Boundary is intersected by this ray
 
-        Inputs:
+        Args:
             b            = the boundary for this ray to split at
             intersection = the point at which ray, boundary intersdect and reflection/refraction happens
         Returns:
@@ -96,7 +96,7 @@ class Ray:
 def intersection(ray, boundary):
     """This function determines when a propogating ray intersects with a given boundary
 
-    Inputs:
+    Args:
         ray             = ray propoagtaing through the space
         boundary        = boundary that ray will encounter
     Returns:
@@ -117,7 +117,7 @@ def intersection(ray, boundary):
 def prop(ray, threshold):
     """This function applies split on a ray while the brightness is still greater than threshold value
 
-    Inputs:
+    Args:
         ray = incident ray on a surface that will be reflected and refracted
         threshold = minimum brightness value that will stop prop
     Returns:
