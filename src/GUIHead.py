@@ -1,45 +1,101 @@
 import sys, os
-from PyQt5.QtWidgets import QMainWindow, QApplication, QDesktopWidget, QAction, qApp, QToolBar, QPushButton, QWidget, QDialog, QDialogButtonBox, QMessageBox, QGridLayout, QTextEdit, QSlider, QLabel
-from PyQt5.QtGui import QIcon, QPainter
-from PyQt5.QtCore import Qt, QSize
+import numpy as np
+from PyQt5.QtWidgets import QMainWindow, QApplication, QDesktopWidget, QAction, qApp, QToolBar, QPushButton, QWidget, QDialog, QDialogButtonBox, QMessageBox, QGridLayout, QLineEdit, QSlider, QLabel
+from PyQt5.QtGui import QIcon, QPainter, QPen, QColor, QPalette, QPolygon
+from PyQt5.QtCore import Qt, QSize, QPoint
 
 IMAGES = os.path.dirname(os.path.dirname(__file__)) + "/Images/"
 print(IMAGES)
+
+class Wedge(QWidget):
+    def __init__(self, *args, **kw_args):
+        super(Wedge, self).__init__(*args, **kw_args)
+        self.angle = 0
+
+    def calc_wedgePt(self) -> QPoint:
+        g = self.geometry()
+        x = np.tan(self.angle*(np.pi/180))*g.height()
+
+        return QPoint(int(g.width()-1-x), 0)
+
+    def paintEvent(self, eventPaintQEvent):
+        g = self.geometry()
+        
+        bl = QPoint(0, g.height()-1)
+        br = QPoint(g.width()-1, g.height()-1)
+        tl = QPoint(0, 0)
+        tr = QPoint(g.width()-1, 0)
+        wedgePt = self.calc_wedgePt()
+        
+        myQP = QPainter(self)
+
+        pen = QPen()
+        pen.setWidth(3)
+        pen.setColor(Qt.lightGray)
+        pen.setDashPattern([5,5])
+        myQP.setPen(pen)
+        myQP.drawLine(wedgePt, tr)
+        myQP.drawLine(tr, br)
+
+        pen.setColor(Qt.black)
+        pen.setDashPattern([1,0])
+        myQP.setPen(pen)
+
+        myQP.drawLine(bl, br)
+        myQP.drawLine(bl, tl)
+        myQP.drawLine(tl, wedgePt)
+        myQP.drawLine(wedgePt, br)
 
 class SolidPopup(QDialog):
     def __init__(self, *args, **kw_args):
         super(SolidPopup, self).__init__(*args, **kw_args)
 
         self.ok = False
-        self.dims_label = QLabel("", self)
+        self.a = QLineEdit("", self)
+        self.a.textChanged.connect(self.wedge_update)
 
         grid = QGridLayout()
         self.setLayout(grid)
 
+        grid.setRowMinimumHeight(2, 300)
+        grid.setColumnMinimumWidth(2, 100)
+        grid.setColumnMinimumWidth(3, 105)
+        grid.setColumnMinimumWidth(1, 105)
+        self.wedge = Wedge()
+        grid.addWidget(self.wedge, 2, 1, 1, 3)
+
         slider = QSlider(Qt.Horizontal)
         slider.setFocusPolicy(Qt.StrongFocus)
         slider.setTickPosition(QSlider.TicksAbove)
-        slider.setRange(3, 10)
-        slider.setTickInterval(1)
-        slider.valueChanged.connect(self.update_dim)
-        grid.addWidget(slider, 1, 1)
-        self.dims_label.setAlignment(Qt.AlignCenter)
-        self.dims_label.setText(str(slider.value()))
-        grid.addWidget(self.dims_label, 0, 1)
+        slider.setRange(0, 45)
+        slider.setTickInterval(5)
+        slider.valueChanged.connect(self.update_a)
+        grid.addWidget(slider, 1, 2)
+        self.a.setAlignment(Qt.AlignCenter)
+        self.a.setText(str(45-slider.value()))
+        grid.addWidget(self.a, 0, 2)
 
-        dims = QLabel()
-        dims.text()
-
-        btn = QPushButton("Add", self)
-        btn.clicked.connect(self.make)
-        grid.addWidget(btn, 3, 1)
+        btn_c = QPushButton("Cancel", self)
+        btn_c.clicked.connect(self.make)
+        grid.addWidget(btn_c, 3, 0)
+        btn_a = QPushButton("Add", self)
+        btn_a.clicked.connect(self.make)
+        grid.addWidget(btn_a, 3, 4)
 
     def make(self, *args, **kw_args):
         self.ok = True
         self.close()
 
-    def update_dim(self, value):
-        self.dims_label.setText(str(value))
+    def update_a(self, value):
+        self.a.setText(str(45-value))
+    
+    def wedge_update(self, value):
+
+        if value == "":
+            self.a.setText("0")
+        else:
+            self.wedge.angle = float(value)
+            self.wedge.update()
 
 class Main(QMainWindow):
     
@@ -86,7 +142,7 @@ class Main(QMainWindow):
         btn.setIcon(QIcon(IMAGES+"solid.png"))
         btn.setIconSize(QSize(section, section))
         btn.clicked.connect(self.add_solid)
-        btn.setStatusTip("Add an n-sided solid to the system")
+        btn.setStatusTip("Add a wedge to the system")
 
         self.toolbar.addWidget(btn)
 
@@ -101,16 +157,16 @@ class Main(QMainWindow):
 
     def add_mirror(self):
         """ adds a mirror to the system """
-        print("mirror made")
+        pass
 
     def add_solid(self):
-        """ adds an n-sided solid to the system """
-        print("solid made")
+        """ adds a wedge to the system """
         w = SolidPopup()
-        w.setGeometry(200, 200, 200, 200)
-        w.setAttribute(Qt.WA_DeleteOnClose)
+        w.setMinimumSize(200, 200)
         w.exec_()
         print(w.ok)
+        print(w.a.text())
+        w.deleteLater()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
