@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QDesktopWidget, QAction, 
 from PyQt5.QtGui import QIcon, QPainter, QPen, QColor, QPalette, QPolygon, QDoubleValidator
 from PyQt5.QtCore import Qt, QSize, QPoint
 
-from support import Boundary
+from core import Boundary
 
 IMAGES = os.path.dirname(os.path.dirname(__file__)) + "/Images/"
 
