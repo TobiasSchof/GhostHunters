@@ -1,31 +1,39 @@
 import sys, os
 import numpy as np
 from PyQt5.QtWidgets import QMainWindow, QApplication, QDesktopWidget, QAction, qApp, QToolBar, QPushButton, QWidget, QDialog, QDialogButtonBox, QMessageBox, QGridLayout, QLineEdit, QSlider, QLabel
-from PyQt5.QtGui import QIcon, QPainter, QPen, QColor, QPalette, QPolygon
+from PyQt5.QtGui import QIcon, QPainter, QPen, QColor, QPalette, QPolygon, QDoubleValidator
 from PyQt5.QtCore import Qt, QSize, QPoint
 
+from support import Boundary
+
 IMAGES = os.path.dirname(os.path.dirname(__file__)) + "/Images/"
-print(IMAGES)
 
 class Wedge(QWidget):
     def __init__(self, *args, **kw_args):
         super(Wedge, self).__init__(*args, **kw_args)
         self.angle = 0
 
-    def calc_wedgePt(self) -> QPoint:
         g = self.geometry()
-        x = np.tan(self.angle*(np.pi/180))*g.height()
 
-        return QPoint(int(g.width()-1-x), 0)
+        self.bl = QPoint(0, g.height()-1)
+        self.br = QPoint(g.width()-1, g.height()-1)
+        self.tl = QPoint(0, 0)
+        self.tr = QPoint(g.width()-1, 0)
+        self.wedgePt = QPoint(g.width()-1, 0)
+
+    def calc_wedgePt(self) -> QPoint:
+        x = np.tan(self.angle*(np.pi/180))*(self.br.y() - self.tr.y())
+
+        return QPoint(int(self.tr.x()-x), 0)
 
     def paintEvent(self, eventPaintQEvent):
         g = self.geometry()
         
-        bl = QPoint(0, g.height()-1)
-        br = QPoint(g.width()-1, g.height()-1)
-        tl = QPoint(0, 0)
-        tr = QPoint(g.width()-1, 0)
-        wedgePt = self.calc_wedgePt()
+        self.bl = QPoint(0, g.height()-1)
+        self.br = QPoint(g.width()-1, g.height()-1)
+        self.tl = QPoint(0, 0)
+        self.tr = QPoint(g.width()-1, 0)
+        self.wedgePt = self.calc_wedgePt()
         
         myQP = QPainter(self)
 
@@ -34,53 +42,69 @@ class Wedge(QWidget):
         pen.setColor(Qt.lightGray)
         pen.setDashPattern([5,5])
         myQP.setPen(pen)
-        myQP.drawLine(wedgePt, tr)
-        myQP.drawLine(tr, br)
+        myQP.drawLine(self.wedgePt, self.tr)
+        myQP.drawLine(self.tr, self.br)
 
         pen.setColor(Qt.black)
         pen.setDashPattern([1,0])
         myQP.setPen(pen)
 
-        myQP.drawLine(bl, br)
-        myQP.drawLine(bl, tl)
-        myQP.drawLine(tl, wedgePt)
-        myQP.drawLine(wedgePt, br)
+        myQP.drawLine(self.bl, self.br)
+        myQP.drawLine(self.bl, self.tl)
+        myQP.drawLine(self.tl, self.wedgePt)
+        myQP.drawLine(self.wedgePt, self.br)
 
-class SolidPopup(QDialog):
+class WedgePopup1(QDialog):
     def __init__(self, *args, **kw_args):
-        super(SolidPopup, self).__init__(*args, **kw_args)
+        super(WedgePopup1, self).__init__(*args, **kw_args)
+
+        self.setWindowTitle("Wedge angle selection")
 
         self.ok = False
         self.a = QLineEdit("", self)
+        self.a.setValidator(QDoubleValidator(0, 45, 3, notation=QDoubleValidator.StandardNotation))
+        self.a.setToolTip("Wedge angle in degrees")
         self.a.textChanged.connect(self.wedge_update)
 
         grid = QGridLayout()
         self.setLayout(grid)
 
-        grid.setRowMinimumHeight(2, 300)
-        grid.setColumnMinimumWidth(2, 100)
-        grid.setColumnMinimumWidth(3, 105)
-        grid.setColumnMinimumWidth(1, 105)
+        grid.setRowMinimumHeight(2, 60)
+        grid.setRowMinimumHeight(3, 40)
+        grid.setRowMinimumHeight(4, 40)
+        grid.setRowMinimumHeight(5, 60)
+        grid.setColumnMinimumWidth(0, 105)
+        grid.setColumnMinimumWidth(1, 100)
+        grid.setColumnMinimumWidth(2, 105)
         self.wedge = Wedge()
-        grid.addWidget(self.wedge, 2, 1, 1, 3)
+        grid.addWidget(self.wedge, 2, 0, 4, 3)
 
         slider = QSlider(Qt.Horizontal)
         slider.setFocusPolicy(Qt.StrongFocus)
         slider.setTickPosition(QSlider.TicksAbove)
         slider.setRange(0, 45)
         slider.setTickInterval(5)
+        slider.setValue(45)
         slider.valueChanged.connect(self.update_a)
-        grid.addWidget(slider, 1, 2)
+        grid.addWidget(slider, 1, 1)
         self.a.setAlignment(Qt.AlignCenter)
         self.a.setText(str(45-slider.value()))
-        grid.addWidget(self.a, 0, 2)
+        self.a.setToolTip("Wedge angle in degrees")
+        grid.addWidget(self.a, 0, 1)
+
+        self.ref_idx = QLineEdit("", self)
+        self.ref_idx.setValidator(QDoubleValidator(0, 3, 4, notation = QDoubleValidator.StandardNotation))
+        self.ref_idx.setAlignment(Qt.AlignCenter)
+        self.ref_idx.setText("1.0")
+        grid.addWidget(self.ref_idx, 4, 3)
+        grid.addWidget(QLabel("Refractive index:"), 3, 3)
 
         btn_c = QPushButton("Cancel", self)
-        btn_c.clicked.connect(self.make)
-        grid.addWidget(btn_c, 3, 0)
-        btn_a = QPushButton("Add", self)
+        btn_c.clicked.connect(self.close)
+        grid.addWidget(btn_c, 7, 0)
+        btn_a = QPushButton("Next", self)
         btn_a.clicked.connect(self.make)
-        grid.addWidget(btn_a, 3, 4)
+        grid.addWidget(btn_a, 7, 3)
 
     def make(self, *args, **kw_args):
         self.ok = True
@@ -92,10 +116,76 @@ class SolidPopup(QDialog):
     def wedge_update(self, value):
 
         if value == "":
-            self.a.setText("0")
+            self.wedge.andgle = "0"
         else:
             self.wedge.angle = float(value)
-            self.wedge.update()
+        
+        self.wedge.update()
+
+class WedgePopup2(QDialog):
+
+    def __init__(self, wedge:Wedge):
+        super(WedgePopup2, self).__init__()
+
+        self.setWindowTitle("Transmission coefficients")
+
+        self.wedge = wedge
+
+        grid = QGridLayout()
+
+        grid.setRowMinimumHeight(1, 135)
+        grid.setRowMinimumHeight(2, 30)
+        grid.setRowMinimumHeight(3, 135)
+        grid.setColumnMinimumWidth(1, 140)
+        grid.setColumnMinimumWidth(2, 30)
+        grid.setColumnMinimumWidth(3, 140)
+        grid.setRowMinimumHeight(5, 40)
+
+        grid.addWidget(self.wedge, 1, 1, 3, 3)
+
+        self.ok = False
+
+        self.l = QLineEdit("", self)
+        self.l.setValidator(QDoubleValidator(0.0, 1.0, 3, notation=QDoubleValidator.StandardNotation))
+        self.l.setToolTip("Ratio of light that the left face transmits")
+        self.l.setAlignment(Qt.AlignCenter)
+        self.l.setText("1.0")
+
+        self.r = QLineEdit("", self)
+        self.r.setValidator(QDoubleValidator(0.0, 1.0, 3, notation=QDoubleValidator.StandardNotation))
+        self.r.setToolTip("Ratio of light that the right face transmits")
+        self.r.setAlignment(Qt.AlignCenter)
+        self.r.setText("1.0")
+
+        self.t = QLineEdit("", self)
+        self.t.setValidator(QDoubleValidator(0.0, 1.0, 3, notation=QDoubleValidator.StandardNotation))
+        self.t.setToolTip("Ratio of light that the top face transmits")
+        self.t.setAlignment(Qt.AlignCenter)
+        self.t.setText("1.0")
+
+        self.b = QLineEdit("", self)
+        self.b.setValidator(QDoubleValidator(0.0, 1.0, 3, notation=QDoubleValidator.StandardNotation))
+        self.b.setToolTip("Ratio of light that the bottom face transmits")
+        self.b.setAlignment(Qt.AlignCenter)
+        self.b.setText("1.0")
+
+        grid.addWidget(self.l, 2, 0, 1, 1)
+        grid.addWidget(self.r, 2, 4, 1, 1)
+        grid.addWidget(self.t, 0, 2, 1, 1)
+        grid.addWidget(self.b, 4, 2, 1, 1)
+
+        btn_c = QPushButton("Discard", self)
+        btn_c.clicked.connect(self.close)
+        grid.addWidget(btn_c, 6, 1)
+        btn_a = QPushButton("Create", self)
+        btn_a.clicked.connect(self.make)
+        grid.addWidget(btn_a, 6, 3)
+
+        self.setLayout(grid)
+
+    def make(self, *args, **kw_args):
+        self.ok = True
+        self.close()    
 
 class Main(QMainWindow):
     
@@ -103,6 +193,7 @@ class Main(QMainWindow):
         super().__init__()
 
         self.initUI()
+        self.bounds = []
 
     def initUI(self):
         # displays "status" in bar at bottom of window
@@ -161,12 +252,21 @@ class Main(QMainWindow):
 
     def add_solid(self):
         """ adds a wedge to the system """
-        w = SolidPopup()
-        w.setMinimumSize(200, 200)
-        w.exec_()
-        print(w.ok)
-        print(w.a.text())
-        w.deleteLater()
+        w_a = WedgePopup1()
+        w_a.setMinimumSize(200, 200)
+        w_a.exec_()
+        if w_a.ok:
+            w_c = WedgePopup2(w_a.wedge)
+            w_c.setMinimumSize(200, 200)
+            w_c.exec_()
+            if w_c.ok:
+                ref_idx = 0 if w_a.ref_idx.text() == "" else float(w_a.ref_idx.text())
+                self.bounds.append(Boundary(list(w_c.wedge.tl), list(w_c.wedge.bl), (0 if w_c.l.text() == "" else float(w_c.l.text())), ref_idx))
+                self.bounds.append(Boundary(list(w_c.wedge.tl), list(w_c.wedge.tr), (0 if w_c.t.text() == "" else float(w_c.t.text())), ref_idx))
+                self.bounds.append(Boundary(list(w_c.wedge.tr), list(w_c.wedge.br), (0 if w_c.r.text() == "" else float(w_c.lrtext())), ref_idx))
+                self.bounds.append(Boundary(list(w_c.wedge.bl), list(w_c.wedge.br), (0 if w_c.b.text() == "" else float(w_c.b.text())), ref_idx))
+            w_c.deleteLater()
+        w_a.deleteLater()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
