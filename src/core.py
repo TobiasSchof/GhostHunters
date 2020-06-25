@@ -54,22 +54,22 @@ class Ray:
         self.angle = angle
         self.brightness = brightness
 
-    def ray_coords(self, start:list, angle:float)
-    """ Defines lists of x,y coordinates for the ray
+    def ray_coords(self, start:list, angle:float):
+        """ Defines lists of x,y coordinates for the ray
 
-        Inputs: 
-            start: [int, int]     = the starting point of the ray
-            angle:  float         = angle of the ray in radians
-        Returns:
-            x_ray: list           = a range of x values defining the ray path
-            y_ray: list           = a range of y values defining the ray path
+            Inputs: 
+                start: [int, int]     = the starting point of the ray
+                angle:  float         = angle of the ray in radians
+            Returns:
+                x_ray: list           = a range of x values defining the ray path
+                y_ray: list           = a range of y values defining the ray path
 
-    """
-    x_ray = np.arange(self.start[0], 101)
-    slope = np.tan(self.angle)
-    intercept = self.start[0] - (slope * self.start[1])
-    y_ray = [slope * x + intercept for x in x_ray]
-    return x_ray, y_ray
+        """
+        x_ray = np.arange(self.start[0], 101)
+        slope = np.tan(self.angle)
+        intercept = self.start[0] - (slope * self.start[1])
+        y_ray = [slope * x + intercept for x in x_ray]
+        return x_ray, y_ray
 
 
     def split(self, b:Boundary, intersection:list):
