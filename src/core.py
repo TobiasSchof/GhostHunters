@@ -1,6 +1,7 @@
 # A python script to hold the basic classes/functions used in this package
 import numpy as np
 import math
+
 class Boundary:
     """ This class defines a Boundary between air and another medium
 
@@ -9,6 +10,7 @@ class Boundary:
         end:       [float, float] = the end of the line segment defining this barrier
         t_coeff:   float          = the transmission coefficient of the barrier, 0<t_coeff<1
         ref_idx:   float          = the refractive index of the other medium, ref_index > 0
+
         norm:      [float, float] = the direction of the norm towards the air side
     """
 
@@ -40,6 +42,7 @@ class Boundary:
             intercept = self.end[1]-slope*end[0]
             y_boundary = [slope*x+intercept for x in x_boundary]
         return x_boundary, y_boundary
+
 
 class Ray:
     """ This class defines a single ray of light
@@ -77,11 +80,13 @@ class Ray:
         return x_ray, y_ray
 
 
+
     def split(self, b:Boundary, intersection:list):
         """ Splits this ray into two rays (one reflected, one refracted) at the given Boundary
 
         This method assumes that the given Boundary is intersected by this ray
         Currently the only supported mode is air -> wedge material
+
 
         Inputs:
             b            = the boundary for this ray to split at
@@ -119,6 +124,7 @@ def intersection(ray, boundary):
                     int_y=y_ray[i]
                     return [int_x, int_y]
 
+
 def prop(ray, threshold):
     """This function applies split on a ray while the brightness is still greater than threshold value
 
@@ -129,6 +135,7 @@ def prop(ray, threshold):
 
     """
     ray_list=[]
+
     if ray.brightness <= threshold:
         return
     ray_list.append(ray)
