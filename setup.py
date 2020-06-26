@@ -4,7 +4,7 @@ setup(
 
     name="Ghost Hunters",
 
-    version="0.5",
+    version="0.7",
 
     packages=find_packages()
 )
