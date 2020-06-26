@@ -1,14 +1,17 @@
 # A python script to hold the basic classes/functions used in this package
+import numpy as np
+import math
 
 class Boundary:
     """ This class defines a Boundary between air and another medium\
 
     Parameters:
-        start:     [float, float] = the start of the line segment defining this barrier\
-        end:       [float, float] = the end of the line segment defining this barrier\
-        t_coeff:   float          = the transmission coefficient of the barrier\
-        ref_idx:   float          = the refractive index of the other medium\
-        norm:      [float, float] = the direction of the norm towards the air side\
+        start:     [float, float] = the start of the line segment defining this barrier
+        end:       [float, float] = the end of the line segment defining this barrier
+        t_coeff:   float          = the transmission coefficient of the barrier, 0<t_coeff<1
+        ref_idx:   float          = the refractive index of the other medium, ref_index > 0
+
+        norm:      [float, float] = the direction of the norm towards the air side
     """
 
     def __init__(self, start:list, end:list, t_coeff:float, ref_idx:float):
@@ -30,10 +33,16 @@ class Boundary:
             x_boundary        = a range of x values defining the boundary
             y_boundary        = a range of y values defining the boundary
         """
-        slope = (self.end[1]-self.start[1])/(self.end[0]-self.start[0])
-        intercept = self.end[1]-slope*end[0]
-        x_boundary =  np.arange(self.start[0], self.end[0])
-        y_boundary = [slope*x+intercept for x in x_boundary]
+        if self.end[0]-self.start[0]==0:
+            y_boundary = list(range(self.start[1], self.end[1]))
+            x_boundary = [self.start[0]]
+        else:
+            x_boundary =  list(range(self.start[0], self.end[0]))
+            slope = (self.end[1]-self.start[1])/(self.end[0]-self.start[0])
+            intercept = self.end[1]-slope*end[0]
+            y_boundary = [slope*x+intercept for x in x_boundary]
+        return x_boundary, y_boundary
+
 
 class Ray:
     """ This class defines a single ray of light
@@ -76,6 +85,8 @@ class Ray:
         """ Splits this ray into two rays (one reflected, one refracted) at the given Boundary
 
         This method assumes that the given Boundary is intersected by this ray
+        Currently the only supported mode is air -> wedge material
+
 
         Args:
             b            = the boundary for this ray to split at
@@ -103,15 +114,15 @@ def intersection(ray, boundary):
         int_x, int_y: int, int = the point of intersection
 
     """
-    x_ray , y_ray = Ray.ray_coords(ray)
-    x_bound, y_bound = Boundary.bound_line(boundary)
-    for i in range(len(x_ray)+1):
-        if x_ray[i]==x_bound[i]:
-            if y_ray[i]==y_bound[i]:
-                int_x=x_ray[i]
-                int_y=y_ray[i]
-                return [int_x, int_y]
-    end
+    x_ray , y_ray = ray.ray_coords(ray.start, ray.angle)
+    x_bound, y_bound = boundary.bound_line(boundary.start, boundary.end)
+    for i in range(len(x_ray)):
+        for j in range(len(x_bound)):
+            if x_ray[i]==x_bound[j]:
+                if y_ray[i]==y_bound[j]:
+                    int_x=x_ray[i]
+                    int_y=y_ray[i]
+                    return [int_x, int_y]
 
 
 def prop(ray, threshold):
@@ -123,7 +134,8 @@ def prop(ray, threshold):
     Returns:
 
     """
-    ray_list=[];
+    ray_list=[]
+
     if ray.brightness <= threshold:
         return
     ray_list.append(ray)
