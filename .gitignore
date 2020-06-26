@@ -1,8 +1,8 @@
-
 .DS_Store
-DS_Store
+
 __pycache__/
 .vscode/
 build/
 dist/
-Ghost_Hunters.egg-info
+Ghost_Hunters.egg-info/
+

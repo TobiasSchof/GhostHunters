@@ -1,0 +1,300 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Core &mdash; Ghost Hunters 0.7 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> Ghost Hunters
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">Core</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ghost Hunters</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Core</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/GhostHunters.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-core">
+<span id="core"></span><span id="ghosthunters"></span><h1>Core<a class="headerlink" href="#module-core" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="core.Boundary">
+<em class="property">class </em><code class="sig-prename descclassname">core.</code><code class="sig-name descname">Boundary</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start</span><span class="p">:</span> <span class="n">list</span></em>, <em class="sig-param"><span class="n">end</span><span class="p">:</span> <span class="n">list</span></em>, <em class="sig-param"><span class="n">t_coeff</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">ref_idx</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#core.Boundary" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class defines a Boundary between air and another medium</p>
+<dl class="simple">
+<dt>Parameters:</dt><dd><p>start:     [float, float] = the start of the line segment defining this barrier
+end:       [float, float] = the end of the line segment defining this barrier
+t_coeff:   float          = the transmission coefficient of the barrier
+ref_idx:   float          = the refractive index of the other medium
+norm:      [float, float] = the direction of the norm towards the air side</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="core.Boundary.bound_line">
+<code class="sig-name descname">bound_line</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start</span><span class="p">:</span> <span class="n">list</span></em>, <em class="sig-param"><span class="n">end</span><span class="p">:</span> <span class="n">list</span></em><span class="sig-paren">)</span><a class="headerlink" href="#core.Boundary.bound_line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the boundary lines of the material given its start and endpoints</p>
+<p>This method returns the equation of a line that defines the boundary</p>
+<dl class="simple">
+<dt>Args: </dt><dd><p>start: [int, int] = starting point of the boundary
+end: [int, int]   = end of the boundary</p>
+</dd>
+<dt>Returns: </dt><dd><p>x_boundary        = a range of x values defining the boundary
+y_boundary        = a range of y values defining the boundary</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="core.Ray">
+<em class="property">class </em><code class="sig-prename descclassname">core.</code><code class="sig-name descname">Ray</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start</span><span class="p">:</span> <span class="n">list</span></em>, <em class="sig-param"><span class="n">angle</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">brightness</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#core.Ray" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>This class defines a single ray of light</dt><dd><p>For proper intersection at the boundary, let 0 &lt; angle &lt; np.pi</p>
+</dd>
+<dt>Parameters:</dt><dd><p>start: [int, int]     = the starting point of the ray
+angle: [float, float] = angle of the ray in radians
+brightness: float     = the brightness of the ray (as a fraction of the original power)</p>
+</dd>
+<dt>Methods:</dt><dd><p>split = splits this ray at a given Boundary</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="core.Ray.ray_coords">
+<code class="sig-name descname">ray_coords</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start</span><span class="p">:</span> <span class="n">list</span></em>, <em class="sig-param"><span class="n">angle</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#core.Ray.ray_coords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines lists of x,y coordinates for the ray</p>
+<dl class="simple">
+<dt>Args: </dt><dd><p>start: [int, int]     = the starting point of the ray
+angle:  float         = angle of the ray in radians</p>
+</dd>
+<dt>Returns:</dt><dd><p>x_ray: list           = a range of x values defining the ray path
+y_ray: list           = a range of y values defining the ray path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="core.Ray.split">
+<code class="sig-name descname">split</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">b</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#core.Boundary" title="core.Boundary">core.Boundary</a></span></em>, <em class="sig-param"><span class="n">intersection</span><span class="p">:</span> <span class="n">list</span></em><span class="sig-paren">)</span><a class="headerlink" href="#core.Ray.split" title="Permalink to this definition">¶</a></dt>
+<dd><p>Splits this ray into two rays (one reflected, one refracted) at the given Boundary</p>
+<p>This method assumes that the given Boundary is intersected by this ray</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>b            = the boundary for this ray to split at
+intersection = the point at which ray, boundary intersdect and reflection/refraction happens</p>
+</dd>
+<dt>Returns:</dt><dd><p>ray_refl = the refracted ray
+ray_refr = the reflected ray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="core.intersection">
+<code class="sig-prename descclassname">core.</code><code class="sig-name descname">intersection</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ray</span></em>, <em class="sig-param"><span class="n">boundary</span></em><span class="sig-paren">)</span><a class="headerlink" href="#core.intersection" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function determines when a propogating ray intersects with a given boundary</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>ray             = ray propoagtaing through the space
+boundary        = boundary that ray will encounter</p>
+</dd>
+<dt>Returns:</dt><dd><p>int_x, int_y: int, int = the point of intersection</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="core.prop">
+<code class="sig-prename descclassname">core.</code><code class="sig-name descname">prop</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ray</span></em>, <em class="sig-param"><span class="n">threshold</span></em><span class="sig-paren">)</span><a class="headerlink" href="#core.prop" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function applies split on a ray while the brightness is still greater than threshold value</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>ray = incident ray on a surface that will be reflected and refracted
+threshold = minimum brightness value that will stop prop</p>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Connor Vancil, Tobias Schofield
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
