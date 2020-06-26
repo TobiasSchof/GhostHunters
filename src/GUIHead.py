@@ -8,9 +8,9 @@ from core import Boundary
 
 IMAGES = os.path.dirname(os.path.dirname(__file__)) + "/Images/"
 
-class Wedge(QWidget):
+class WedgePrimitive(QWidget):
     def __init__(self, *args, **kw_args):
-        super(Wedge, self).__init__(*args, **kw_args)
+        super(WedgePrimitive, self).__init__(*args, **kw_args)
         self.angle = 0
 
         g = self.geometry()
@@ -76,7 +76,7 @@ class WedgePopup1(QDialog):
         grid.setColumnMinimumWidth(0, 105)
         grid.setColumnMinimumWidth(1, 100)
         grid.setColumnMinimumWidth(2, 105)
-        self.wedge = Wedge()
+        self.wedge = WedgePrimitive()
         grid.addWidget(self.wedge, 2, 0, 4, 3)
 
         slider = QSlider(Qt.Horizontal)
@@ -124,7 +124,7 @@ class WedgePopup1(QDialog):
 
 class WedgePopup2(QDialog):
 
-    def __init__(self, wedge:Wedge):
+    def __init__(self, wedge:WedgePrimitive):
         super(WedgePopup2, self).__init__()
 
         self.setWindowTitle("Transmission coefficients")

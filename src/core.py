@@ -3,7 +3,7 @@ import numpy as np
 import math
 
 class Boundary:
-    """ This class defines a Boundary between air and another medium
+    """ This class defines a Boundary between air and another medium\
 
     Parameters:
         start:     [float, float] = the start of the line segment defining this barrier
@@ -26,7 +26,7 @@ class Boundary:
         
         This method returns the equation of a line that defines the boundary
 
-        Inputs: 
+        Args: 
             start: [int, int] = starting point of the boundary
             end: [int, int]   = end of the boundary
         Returns: 
@@ -66,19 +66,19 @@ class Ray:
     def ray_coords(self, start:list, angle:float):
         """ Defines lists of x,y coordinates for the ray
 
-        Inputs: 
-            start: [int, int]     = the starting point of the ray
-            angle:  float         = angle of the ray in radians, measured with respect to surface of collision
-        Returns:
-            x_ray: list           = a range of x values defining the ray path
-            y_ray: list           = a range of y values defining the ray path
+            Args: 
+                start: [int, int]     = the starting point of the ray
+                angle:  float         = angle of the ray in radians
+            Returns:
+                x_ray: list           = a range of x values defining the ray path
+                y_ray: list           = a range of y values defining the ray path
+
         """
-        x_ray = list(range(self.start[0], 101))
+        x_ray = np.arange(self.start[0], 101)
         slope = np.tan(self.angle)
         intercept = self.start[0] - (slope * self.start[1])
-        y_ray = [math.floor(slope * x + intercept) for x in x_ray]
+        y_ray = [slope * x + intercept for x in x_ray]
         return x_ray, y_ray
-
 
 
     def split(self, b:Boundary, intersection:list):
@@ -88,7 +88,7 @@ class Ray:
         Currently the only supported mode is air -> wedge material
 
 
-        Inputs:
+        Args:
             b            = the boundary for this ray to split at
             intersection = the point at which ray, boundary intersdect and reflection/refraction happens
         Returns:
@@ -107,7 +107,7 @@ class Ray:
 def intersection(ray, boundary):
     """This function determines when a propogating ray intersects with a given boundary
 
-    Inputs:
+    Args:
         ray             = ray propoagtaing through the space
         boundary        = boundary that ray will encounter
     Returns:
@@ -128,7 +128,7 @@ def intersection(ray, boundary):
 def prop(ray, threshold):
     """This function applies split on a ray while the brightness is still greater than threshold value
 
-    Inputs:
+    Args:
         ray = incident ray on a surface that will be reflected and refracted
         threshold = minimum brightness value that will stop prop
     Returns:

@@ -12,18 +12,18 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('.'))
+sys.path.insert(0, os.path.abspath('../src'))
 
 
 # -- Project information -----------------------------------------------------
 
-project = 'GhostHunters'
-copyright = '2020, Tobias Schofield, Connor Vancil'
-author = 'Tobias Schofield, Connor Vancil'
-master_doc="index"
+project = 'Ghost Hunters'
+copyright = '2020, Connor Vancil, Tobias Schofield'
+author = 'Connor Vancil, Tobias Schofield'
+master_doc='index'
 
 # The full version, including alpha/beta/rc tags
-release = '0.5'
+release = '0.7'
 
 
 # -- General configuration ---------------------------------------------------
