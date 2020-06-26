@@ -6,3 +6,4 @@ __pycache__/
 build/
 dist/
 Ghost_Hunters.egg-info
+src/__pycache__/
